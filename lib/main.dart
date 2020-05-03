@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
@@ -6,16 +7,18 @@ import 'package:firebase_database/firebase_database.dart';
 final FirebaseDatabase database = FirebaseDatabase();
 // definimos que usuario hace la conexion
 DatabaseReference itemRef = database.reference().child('usuario');
-
 void main() {
 
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+
     return new MaterialApp(
         title: 'DisControl',
         theme: new ThemeData(
@@ -26,19 +29,78 @@ class MyApp extends StatelessWidget {
             title: const Text('DisControL'),
           ),
           body: new Container(
-
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              border: new Border.all(
-                color: Colors.black,
-                width: 2.0,
+          child: Column(children: <Widget>[
+            Container(
+              decoration: new BoxDecoration(
+                  color: Colors.white,
+                  border: new Border.all(
+                    color: Colors.black,
+                    width: 2.0,
+                  ),
+                ),
+              child: new Center(
+                  child: new TouchControl()
               ),
             ),
-            child: new Center(
-                child: new TouchControl()
+            Container(
+              child: new Row (
+
+                children: <Widget>[
+
+                  ButtonTheme(
+                    minWidth: 180,
+                    height: 76,
+                    child: new FlatButton(
+                      color: Colors.grey,
+                      shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
+                      child: Text('Click Izquierdo'),
+                      onPressed: () {
+
+                        itemRef.child('clicks').update({
+                          'clickL' : "true"
+                        });
+
+                        itemRef.child('clicks').update({
+                          'clickL' : "false"
+                        });
+
+
+                      },
+                    ),
+
+                  ),
+
+                  ButtonTheme(
+                    minWidth: 180,
+                    height: 76,
+                    child: new FlatButton(
+                      color: Colors.grey,
+                      shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
+                      child: Text('Click Derecho'),
+                      onPressed: () {
+
+                        itemRef.child('clicks').update({
+                          'clickR' : "true"
+                        });
+                        itemRef.child('clicks').update({
+                          'clickR' : "false"
+                        });
+
+                      },
+                    ),
+                  ),
+
+
+                ],
+
+              )
+
             ),
+
+            ]
           ),
-        )
+          ),
+        ),
     );
   }
 }
@@ -112,7 +174,13 @@ class TouchControlState extends State<TouchControl> {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.expand(),
+      constraints: new BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width * 0.75,
+        maxWidth: MediaQuery.of(context).size.width,
+        minHeight: MediaQuery.of(context).size.height * 0.75,
+        maxHeight: MediaQuery.of(context).size.height * 0.75,
+
+      ),
       child: new GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanStart:_handlePanStart,
