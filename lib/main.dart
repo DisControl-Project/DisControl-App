@@ -43,14 +43,17 @@ class MyApp extends StatelessWidget {
               ),
             ),
             Container(
-              child: new Row (
+
+                child: new Row (
 
                 children: <Widget>[
 
-                  ButtonTheme(
-                    minWidth: 180,
-                    height: 76,
+                  Expanded(
+
+                    flex: 1,
+
                     child: new FlatButton(
+
                       color: Colors.grey,
                       shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
                       child: Text('Click Izquierdo'),
@@ -70,9 +73,10 @@ class MyApp extends StatelessWidget {
 
                   ),
 
-                  ButtonTheme(
-                    minWidth: 180,
-                    height: 76,
+                  Expanded(
+
+                    flex: 1,
+
                     child: new FlatButton(
                       color: Colors.grey,
                       shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
@@ -88,6 +92,7 @@ class MyApp extends StatelessWidget {
 
                       },
                     ),
+
                   ),
 
 
@@ -128,38 +133,45 @@ class TouchControlState extends State<TouchControl> {
   double xPos = 0.0;
   double yPos = 0.0;
 
+
   void onChanged(Offset offset) {
     final RenderBox referenceBox = context.findRenderObject();
-    Offset position = referenceBox.globalToLocal(offset);
-   
     if (widget.onChanged != null)
-      widget.onChanged(position);
+      widget.onChanged(offset);
 
     setState(() {
-      xPos = position.dx;
-      yPos = position.dy;
+
+      xPos = offset.dx*2;
+      yPos = offset.dy*2;
+
+      print(xPos);
+      print(yPos);
+      print("-------------");
 
       itemRef.child('pos').update({
         'y_pos' : yPos, 'x_pos' : xPos
       });
 
+
+
     });
 
 
+
   }
+
 
   bool hitTestSelf(Offset position) => true;
 
   void handleEvent(PointerEvent event, BoxHitTestEntry entry) {
     if (event is PointerDownEvent ) {
       // ??
-
-
     }
   }
 
   void _handlePanStart(DragStartDetails details) {
-    onChanged(details.globalPosition);
+    print("start");
+   // onChanged(details.localPosition);
   }
 
   void _handlePanEnd(DragEndDetails details) {
@@ -168,14 +180,15 @@ class TouchControlState extends State<TouchControl> {
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
-    onChanged(details.globalPosition);
+    print("grab");
+    onChanged(details.delta);
   }
 
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
       constraints: new BoxConstraints(
-        minWidth: MediaQuery.of(context).size.width * 0.75,
+        minWidth: MediaQuery.of(context).size.width,
         maxWidth: MediaQuery.of(context).size.width,
         minHeight: MediaQuery.of(context).size.height * 0.75,
         maxHeight: MediaQuery.of(context).size.height * 0.75,
