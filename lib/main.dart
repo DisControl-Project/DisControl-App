@@ -135,14 +135,13 @@ class TouchControlState extends State<TouchControl> {
 
 
   void onChanged(Offset offset) {
-    final RenderBox referenceBox = context.findRenderObject();
     if (widget.onChanged != null)
       widget.onChanged(offset);
 
     setState(() {
 
-      xPos = offset.dx*2;
-      yPos = offset.dy*2;
+      xPos = offset.dx;
+      yPos = offset.dy;
 
       print(xPos);
       print(yPos);
@@ -151,8 +150,6 @@ class TouchControlState extends State<TouchControl> {
       itemRef.child('pos').update({
         'y_pos' : yPos, 'x_pos' : xPos
       });
-
-
 
     });
 
@@ -221,7 +218,6 @@ class TouchControlPainter extends CustomPainter {
       ..color = Colors.pink
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(new Offset(xPos, yPos), markerRadius, paint);
   }
 
 
