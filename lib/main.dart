@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'Teclado.dart';
+import 'iconos_icons.dart';
 
 final FirebaseDatabase database = FirebaseDatabase();
 // definimos que usuario hace la conexion
 DatabaseReference itemRef = database.reference().child('usuario');
 void main() {
-
-  runApp(MyApp());
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +21,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
 
     return new MaterialApp(
         title: 'DisControl',
@@ -29,81 +32,127 @@ class MyApp extends StatelessWidget {
             title: const Text('DisControL'),
           ),
           body: new Container(
-          child: Column(children: <Widget>[
-            Container(
-              decoration: new BoxDecoration(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: new BoxDecoration(
                   color: Colors.white,
                   border: new Border.all(
                     color: Colors.black,
                     width: 2.0,
                   ),
                 ),
-              child: new Center(
-                  child: new TouchControl()
+                  child: new Center(
+                      child: new TouchControl()
               ),
             ),
-            Container(
+                Container(
 
-                child: new Row (
+                    child: new Row (
 
-                children: <Widget>[
+                      children: <Widget>[
 
-                  Expanded(
+                        Expanded(
 
-                    flex: 1,
+                          flex: 1,
 
-                    child: new FlatButton(
+                          child: new IconButton(
 
-                      color: Colors.grey,
-                      shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
-                      child: Text('Click Izquierdo'),
-                      onPressed: () {
+                            color: Colors.black,
+                            icon: Icon(Iconos.mouse_left_button),
+                            onPressed: () {
 
-                        itemRef.child('clicks').update({
-                          'clickL' : "true"
-                        });
+                              itemRef.child('clicks').update({
+                                'clickL' : "true"
+                              });
 
-                        itemRef.child('clicks').update({
-                          'clickL' : "false"
-                        });
-
-
-                      },
-                    ),
-
-                  ),
-
-                  Expanded(
-
-                    flex: 1,
-
-                    child: new FlatButton(
-                      color: Colors.grey,
-                      shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
-                      child: Text('Click Derecho'),
-                      onPressed: () {
-
-                        itemRef.child('clicks').update({
-                          'clickR' : "true"
-                        });
-                        itemRef.child('clicks').update({
-                          'clickR' : "false"
-                        });
-
-                      },
-                    ),
-
-                  ),
+                              itemRef.child('clicks').update({
+                                'clickL' : "false"
+                              });
 
 
-                ],
+                              },
+//                            onLongPress: () {
+//
+//                              itemRef.child('clicks').update({
+//                                'clickL' : "true"
+//                              });
+//
+//                              },
 
-              )
+                          ),
 
+                        ),
+
+                          Expanded(
+
+                            flex: 1,
+
+                            child: new IconButton(
+                              color: Colors.black,
+
+                              icon: Icon(Iconos.mouse_right_button),
+                              onPressed: () {
+                                itemRef.child('clicks').update({
+                                  'clickR' : "true"
+                                });
+                                itemRef.child('clicks').update({
+                                  'clickR' : "false"
+                                });
+
+                                },
+//                            onLongPress: () {
+//
+//                              itemRef.child('clicks').update({
+//                                'clickR' : "true"
+//                              });
+//
+//                              },
+
+                            ),
+
+                          ),
+                      ],
+
+
+                    )
+
+                ),
+                Container(
+
+                    child: new Row (
+                      children: <Widget>[
+
+                        Expanded(
+
+                          flex: 1,
+
+                          child: new IconButton(
+
+                            color: Colors.black,
+                            icon: new Icon(Icons.keyboard),
+                            onPressed: () {
+
+                              print("Teclado");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Teclado()),
+                              );
+
+                              },
+
+                          ),
+
+                        ),
+
+                      ],
+
+                    )
+
+                ),
+
+              ]
             ),
-
-            ]
-          ),
           ),
         ),
     );
@@ -138,8 +187,6 @@ class TouchControlState extends State<TouchControl> {
     if (widget.onChanged != null)
       widget.onChanged(offset);
 
-    setState(() {
-
       xPos = offset.dx;
       yPos = offset.dy;
 
@@ -151,7 +198,7 @@ class TouchControlState extends State<TouchControl> {
         'y_pos' : yPos, 'x_pos' : xPos
       });
 
-    });
+
 
 
 
@@ -217,7 +264,6 @@ class TouchControlPainter extends CustomPainter {
     final paint = new Paint()
       ..color = Colors.pink
       ..style = PaintingStyle.fill;
-
   }
 
 
