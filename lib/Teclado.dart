@@ -230,6 +230,7 @@ class Teclado extends StatelessWidget {
 
                                   flex: 3,
 
+
                                   child: new IconButton(
                                     color: Colors.black,
                                     icon: new Icon(Icons.arrow_forward),
