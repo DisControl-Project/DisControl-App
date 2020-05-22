@@ -19,6 +19,9 @@ class Teclado extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
+
+                margin: const EdgeInsets.only(top: 35.0, left: 25, right: 25),
+
                 child: new Column(
                   children: <Widget>[
                     new Center(
