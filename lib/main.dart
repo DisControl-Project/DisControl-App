@@ -7,12 +7,16 @@ import 'Teclado.dart';
 import 'iconos_icons.dart';
 
 final FirebaseDatabase database = FirebaseDatabase();
-// definimos que usuario hace la conexion
+// Definimos que usuario hace la conexion(falta por implementar)
 DatabaseReference itemRef = database.reference().child('usuario');
+
 void main() {
+
   runApp(MaterialApp(
+
     title: 'Navigation Basics',
     home: MyApp(),
+
   ));
 }
 
@@ -23,29 +27,48 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return new MaterialApp(
+
         title: 'DisControl',
+
         theme: new ThemeData(
+
           primarySwatch: Colors.pink,
+
         ),
+
         home: new Scaffold(
+
           appBar: new AppBar(
+
             title: const Text('DisControL'),
+
           ),
           body: new Container(
+
             child: Column(
+
               children: <Widget>[
+
                 Container(
+
                   decoration: new BoxDecoration(
-                  color: Colors.white,
-                  border: new Border.all(
-                    color: Colors.black,
-                    width: 2.0,
+
+                    color: Colors.white,
+                    border: new Border.all(
+
+                      color: Colors.black,
+                      width: 2.0,
+
+                    ),
+                  ),
+                  child: new Center(
+
+                    // LLamamos a la clase "TouchControl"
+                    // Mostramos el panel en el donde ejecutaremos la función de mover el ratón
+                      child: new TouchControl()
+
                   ),
                 ),
-                  child: new Center(
-                      child: new TouchControl()
-              ),
-            ),
                 Container(
 
                     child: new Row (
@@ -56,10 +79,13 @@ class MyApp extends StatelessWidget {
 
                           flex: 1,
 
+                          // Botón click izquierdo
                           child: new IconButton(
 
                             color: Colors.black,
                             icon: Icon(Iconos.mouse_left_button),
+
+                            // Al hacer click actualizamos Firebase con un "true", luego vuelve a "false"
                             onPressed: () {
 
                               itemRef.child('clicks').update({
@@ -70,8 +96,8 @@ class MyApp extends StatelessWidget {
                                 'clickL' : "false"
                               });
 
-
                               },
+                            // Metodo que se usa al mantener pulsado el botón
 //                            onLongPress: () {
 //
 //                              itemRef.child('clicks').update({
@@ -81,17 +107,19 @@ class MyApp extends StatelessWidget {
 //                              },
 
                           ),
-
                         ),
 
                           Expanded(
 
                             flex: 1,
 
+                            // Botón click izquierdo
                             child: new IconButton(
-                              color: Colors.black,
 
+                              color: Colors.black,
                               icon: Icon(Iconos.mouse_right_button),
+
+                              // Al hacer click actualizamos Firebase con un "true", luego vuelve a "false"
                               onPressed: () {
                                 itemRef.child('clicks').update({
                                   'clickR' : "true"
@@ -101,22 +129,10 @@ class MyApp extends StatelessWidget {
                                 });
 
                                 },
-//                            onLongPress: () {
-//
-//                              itemRef.child('clicks').update({
-//                                'clickR' : "true"
-//                              });
-//
-//                              },
-
                             ),
-
                           ),
                       ],
-
-
                     )
-
                 ),
                 Container(
 
@@ -127,30 +143,29 @@ class MyApp extends StatelessWidget {
 
                           flex: 1,
 
+                          // Botón Teclado
+
                           child: new IconButton(
 
                             color: Colors.black,
                             icon: new Icon(Icons.keyboard),
+
+                            // Al hacer click navegamos a la ventana "Teclado"
                             onPressed: () {
 
                               print("Teclado");
                               Navigator.push(
+
                                 context,
                                 MaterialPageRoute(builder: (context) => Teclado()),
+
                               );
-
                               },
-
                           ),
-
                         ),
-
                       ],
-
                     )
-
                 ),
-
               ]
             ),
           ),
@@ -158,7 +173,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+// Almacenamos las posiciones del ratón
 class TouchControl extends StatefulWidget {
   final double xPos;
   final double yPos;
@@ -173,17 +188,13 @@ class TouchControl extends StatefulWidget {
   TouchControlState createState() => new TouchControlState();
 }
 
-/**
- * Draws a circle at supplied position.
- *
- */
-
 class TouchControlState extends State<TouchControl> {
   double xPos = 0.0;
   double yPos = 0.0;
 
-
+  // Actualiza la daistancia que se tiene que mover el ratón en el Firebase
   void onChanged(Offset offset) {
+
     if (widget.onChanged != null)
       widget.onChanged(offset);
 
@@ -198,75 +209,34 @@ class TouchControlState extends State<TouchControl> {
         'y_pos' : yPos, 'x_pos' : xPos
       });
 
-
-
-
-
   }
 
-
-  bool hitTestSelf(Offset position) => true;
-
-  void handleEvent(PointerEvent event, BoxHitTestEntry entry) {
-    if (event is PointerDownEvent ) {
-      // ??
-    }
-  }
-
-  void _handlePanStart(DragStartDetails details) {
-    print("start");
-   // onChanged(details.localPosition);
-  }
-
-  void _handlePanEnd(DragEndDetails details) {
-    print('end');
-    // TODO
-  }
-
+// Cuando arrastras en el panel, envía la distancia recorrida al método "onChanged"
   void _handlePanUpdate(DragUpdateDetails details) {
-    print("grab");
     onChanged(details.delta);
   }
 
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+
+      // Define el tamaño del panel
       constraints: new BoxConstraints(
+
         minWidth: MediaQuery.of(context).size.width,
         maxWidth: MediaQuery.of(context).size.width,
         minHeight: MediaQuery.of(context).size.height * 0.75,
         maxHeight: MediaQuery.of(context).size.height * 0.75,
 
       ),
+
+      // Detecta el movimiento en el panel y llama al método "_handlePanUpdate"
       child: new GestureDetector(
+
         behavior: HitTestBehavior.opaque,
-        onPanStart:_handlePanStart,
-        onPanEnd: _handlePanEnd,
         onPanUpdate: _handlePanUpdate,
-        child: new CustomPaint(
-          size: new Size(xPos, yPos),
-          painter: new TouchControlPainter(xPos, yPos),
-        ),
+
       ),
     );
   }
-}
-
-class TouchControlPainter extends CustomPainter {
-  static const markerRadius = 10.0;
-  final double xPos;
-  final double yPos;
-
-  TouchControlPainter(this.xPos, this.yPos);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = new Paint()
-      ..color = Colors.pink
-      ..style = PaintingStyle.fill;
-  }
-
-
-  @override
-  bool shouldRepaint(TouchControlPainter old) => xPos != old.xPos && yPos !=old.yPos;
 }
