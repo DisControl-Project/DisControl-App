@@ -18,6 +18,9 @@ void main() {
     home: MyApp(),
 
   ));
+  itemRef.child('texto').update({
+    'texto' : ""
+  });
 }
 
 class MyApp extends StatelessWidget {
